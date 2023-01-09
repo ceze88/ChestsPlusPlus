@@ -136,15 +136,15 @@ public class PartyMenu implements InventoryProvider {
             Messages.NO_PERMISSION(player);
             return;
         }
-        TextInputUI.getInput(player, Message.PARTY_ENTER_NAME.getString(), (p, partyName) -> {
-            boolean result = PartyUtils.createParty(player, partyName);
+        TextInputUI.getInput(player, Message.PARTY_ENTER_NAME.getString(), (completion) -> {
+            boolean result = PartyUtils.createParty(player, completion.getText());
             if (result){
-                player.sendMessage(ChatColor.GREEN+ Message.PARTY_CREATED.getString(ChatColor.WHITE+partyName+ChatColor.GREEN));
+                player.sendMessage(ChatColor.GREEN+ Message.PARTY_CREATED.getString(ChatColor.WHITE+completion.getText()+ChatColor.GREEN));
                 getMenu().open(player);
-                return AnvilGUI.Response.close();
+                return List.of(AnvilGUI.ResponseAction.close());
             } else {
-                player.sendMessage(ChatColor.RED+Message.PARTY_ALREADY_EXISTS.getString(ChatColor.WHITE+partyName+ChatColor.RED));
-                return AnvilGUI.Response.text(Message.ALREADY_EXISTS_ANVIL.getString());
+                player.sendMessage(ChatColor.RED+Message.PARTY_ALREADY_EXISTS.getString(ChatColor.WHITE+completion.getText()+ChatColor.RED));
+                return List.of(AnvilGUI.ResponseAction.replaceInputText(Message.ALREADY_EXISTS_ANVIL.getString()));
             }
         });
     }
